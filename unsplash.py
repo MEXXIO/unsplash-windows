@@ -30,15 +30,14 @@ current_wallpapers = [None] * MONITOR_COUNT
 
 def set_wallpaper(path):
     # Load all images
-    images= [Image.open(path).resize(MONITOR_SIZE, Image.BILINEAR)]
-
-    
     for k, v in {("TileWallpaper", "1"), ("WallpaperStyle", "0")}:
         key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Control Panel\\Desktop", 0, winreg.KEY_WOW64_32KEY | winreg.KEY_WRITE)
         winreg.SetValueEx(key, k, 0, winreg.REG_SZ, v)
     ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, os.path.abspath(path), SPIF_SENDWININICHANGE | SPIF_UPDATEINIFILE)
 
 def get_unsplash(keyword="nature"):
+    print(f'Wallpaper Category : {keyword}')
+
     ## Set up the image URL and filename
     image_url = f"https://source.unsplash.com/{MONITOR_SIZE}/?{keyword}"
     foldername = keyword # Change path 
@@ -66,9 +65,7 @@ def get_unsplash(keyword="nature"):
 
 if __name__ == "__main__":
     try:
-        print(f'Wallpaper Category : {sys.argv[1]}')
         wallpaper = get_unsplash(sys.argv[1])
     except:
-        print('Wallpaper Category : Cat')
         wallpaper = get_unsplash()
     set_wallpaper(wallpaper)
